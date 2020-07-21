@@ -8,17 +8,20 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
+@Component // 把当前类初始化到Spring容器的上下文
 public class GithubProvider {
+    // 携带数据获取accessToken,通过post请求并返回accessToken
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
 
         OkHttpClient client = new OkHttpClient();
 
+        // 使用alibaba的fastjson
         RequestBody body = RequestBody.create(JSON.toJSONBytes(accessTokenDTO), mediaType);
+
         Request request = new Request.Builder()
                 .url("https://github.com/login/oauth/access_token")
-                .post(body)
+                .post(body)  // 这里的body貌似就是get请求中的？后使用&分隔的参数
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
@@ -31,16 +34,16 @@ public class GithubProvider {
         return null;
     }
 
+    // 携带accessToken,通过get请求并返回用户信息
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder()
                 .url("https://api.github.com/user?access_token=" + accessToken)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-            GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
+            GithubUser githubUser = JSON.parseObject(string, GithubUser.class); // 将string的json解析成java的类对象
             return githubUser;
         } catch (IOException e) {
             e.printStackTrace();

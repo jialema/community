@@ -1,5 +1,10 @@
 package com.majiale.community.dto;
 
+/**
+ * AccessTokenDTO就是用于数据传输，没别的吊用，
+ * 主要用在用户登录和github互动过程中的数据传输
+ */
+
 public class AccessTokenDTO {
     private String client_id;
     private String client_secret;
@@ -7,7 +12,7 @@ public class AccessTokenDTO {
     private String redirect_uri;
     private String state;
 
-    public String getClient_id() {
+    public String getClient_id() {  // 这里变暗我猜是因为这个下划线不符合java的命名规范
         return client_id;
     }
 
