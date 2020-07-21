@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 /**
@@ -36,7 +38,8 @@ public class AuthorizeController {
     @GetMapping("/callback") // @RequestParam 要求参数，如果浏览器中没有这个信息，会出错
     public String callback(@RequestParam(name="code") String code,
                            @RequestParam(name="state") String state,
-                           HttpServletRequest request) { // Spring会自动把上下文中的request写到这个参数中，
+                           HttpServletRequest request,
+                           HttpServletResponse response) { // Spring会自动把上下文中的request写到这个参数中，
                                                          // 这个参数似乎代表浏览器客户端的请求，http请求头中的信息都
                                                          // 封装在这个对象中，可以通过这个对象提供的方法获得客户端请求的所有信息
         // 创建AccessTokenDTO类，其存储和GitHub交互的数据
@@ -54,16 +57,17 @@ public class AuthorizeController {
         // 根据返回的用户信息
         if(githubUser != null) {
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
 
+            response.addCookie(new Cookie("token", token)); // 将token作为每次登陆的秘钥写入cookie
             // 登陆成功，写cookie和session
-
-             request.getSession().setAttribute("user", githubUser); // 将用户信息写入session，因此前端可以访问这个信息
+            // request.getSession().setAttribute("user", githubUser); // 将用户信息写入session，因此前端可以访问这个信息
             return "redirect:/"; // 重定向到根目录
         }else {
             // 登录失败，重新登录
