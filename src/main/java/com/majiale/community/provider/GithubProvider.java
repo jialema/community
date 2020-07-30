@@ -34,6 +34,7 @@ public class GithubProvider {
         return null;
     }
 
+
     // 携带accessToken,通过get请求并返回用户信息
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
@@ -43,7 +44,8 @@ public class GithubProvider {
 
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-            GithubUser githubUser = JSON.parseObject(string, GithubUser.class); // 将string的json解析成java的类对象
+            // 将string的json解析成java的类对象，兼容将下划线变量匹配到驼峰命名变量
+            GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
             return githubUser;
         } catch (IOException e) {
             e.printStackTrace();

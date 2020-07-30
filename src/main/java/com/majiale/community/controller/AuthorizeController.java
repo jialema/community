@@ -52,10 +52,11 @@ public class AuthorizeController {
 
         // 和GitHub进行交互，使用数据进行交互
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
+        // accessToken = "a99f3d1e586b3b2795bf7904e49afcd06337aecd"; 遇到不能登录试试这个也许可以
         GithubUser githubUser = githubProvider.getUser(accessToken);
 
         // 根据返回的用户信息
-        if(githubUser != null) {
+        if(githubUser != null && githubUser.getId() != null) {
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);
@@ -63,6 +64,8 @@ public class AuthorizeController {
             user.setName(githubUser.getName());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setBio(githubUser.getBio());
+            user.setAvatarUrl(githubUser.getAvatarUrl());
             userMapper.insert(user);
 
             response.addCookie(new Cookie("token", token)); // 将token作为每次登陆的秘钥写入cookie
@@ -71,6 +74,7 @@ public class AuthorizeController {
             return "redirect:/"; // 重定向到根目录
         }else {
             // 登录失败，重新登录
+            System.out.println("登陆失败");
         }
         return "redirect:/";
 

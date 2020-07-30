@@ -8,10 +8,13 @@
 [Bootstrap](https://v3.bootcss.com/getting-started/)  
 [Github OAuth](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)  
 [Spring document](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-embedded-database-support)
+[Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#setting-attribute-values)
 
 ## 工具
 [Git](https://git-scm.com/download)  
-[Visual Paradim](https://www.visual-paradigm.com/)
+[Visual Paradim](https://www.visual-paradigm.com/)  
+[Flyway](https://flywaydb.org/getstarted/firststeps/maven)  
+[Lombok](https://projectlombok.org/setup/maven)
 
 ## 脚本
 ```sql
@@ -26,6 +29,5 @@ create table USER
     constraint USER_PK
         primary key (ID)
 );
-
 
 ```
