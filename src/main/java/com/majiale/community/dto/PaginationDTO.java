@@ -6,31 +6,22 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 页面显示问题类
+ */
 @Data
 public class PaginationDTO {
-    private List<QuestionDTO> questions;
-    private boolean showPrevious;
-    private boolean showFirstPage;
-    private boolean showNext;
-    private boolean showEndPage;
-    private Integer page;
-    private List<Integer> pages = new ArrayList<>();
-    private Integer totalPage;
+    private List<QuestionDTO> questions;  //
+    private boolean showPrevious;   // 是否显示前一页编号
+    private boolean showFirstPage;  // 是否显示第一页编号
+    private boolean showNext;       // 是否显示下一页编号
+    private boolean showEndPage;    // 是否显示最后页编号
+    private Integer page;           // 当前页编号
+    private List<Integer> pages = new ArrayList<>(); // 当前页可显示的页编号列表
+    private Integer totalPage;      // 总页数
 
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
-
-        if (page < 1) {
-            page = 1;
-        }
-        if (page > totalPage) {
-            page = totalPage;
-        }
-
+    public void setPagination(Integer totalPage, Integer page) {
+        this.totalPage = totalPage;
         this.page = page;
 
         pages.add(page);

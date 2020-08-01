@@ -50,7 +50,7 @@ public class IndexController {
                 }
             }
 
-        // 根据页面来设置问题的显示
+        // 根据页面来设置问题的显示，page和size都通过URL传入
         PaginationDTO pagination = questionService.list(page, size);
 
         // 将数据放在前端可访问的位置
