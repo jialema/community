@@ -1,5 +1,6 @@
 package com.majiale.community.controller;
 
+import com.majiale.community.dto.PaginationDTO;
 import com.majiale.community.dto.QuestionDTO;
 import com.majiale.community.mapper.QuestionMapper;
 import com.majiale.community.mapper.UserMapper;
@@ -49,8 +50,11 @@ public class IndexController {
                 }
             }
 
-        List<QuestionDTO> questionList = questionService.list(page, size);
-        model.addAttribute("questions", questionList);
+        // 根据页面来设置问题的显示
+        PaginationDTO pagination = questionService.list(page, size);
+
+        // 将数据放在前端可访问的位置
+        model.addAttribute("pagination", pagination);
         return "index";
     }
 }
