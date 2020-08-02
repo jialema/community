@@ -5,6 +5,7 @@ import com.majiale.community.dto.GithubUser;
 import com.majiale.community.mapper.UserMapper;
 import com.majiale.community.model.User;
 import com.majiale.community.provider.GithubProvider;
+import com.majiale.community.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,9 @@ public class AuthorizeController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserSevice userSevice;
+
     @GetMapping("/callback") // @RequestParam 要求参数，如果浏览器中没有这个信息，会出错
     public String callback(@RequestParam(name="code") String code,
                            @RequestParam(name="state") String state,
@@ -52,8 +56,6 @@ public class AuthorizeController {
 
         // 和GitHub进行交互，使用数据进行交互
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-//        accessToken = "99b0d28b95dc3a010d1aa2172bbd9b8c4d2cd419"; // 遇到不能登录试试这个也许可以
-        accessToken = "889f2b805468734f465bc88b2a868673113508b5"; // 遇到不能登录试试这个也许可以，163
         GithubUser githubUser = githubProvider.getUser(accessToken);
 
         // 根据返回的用户信息
@@ -63,11 +65,9 @@ public class AuthorizeController {
             user.setToken(token);
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setBio(githubUser.getBio());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userSevice.createOrUpdate(user);
 
             response.addCookie(new Cookie("token", token)); // 将token作为每次登陆的秘钥写入cookie
             // 登陆成功，写cookie和session
@@ -78,6 +78,15 @@ public class AuthorizeController {
             System.out.println("登陆失败");
         }
         return "redirect:/";
+    }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

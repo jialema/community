@@ -39,7 +39,7 @@ public class GithubProvider {
     // 携带accessToken,通过get请求并返回用户信息
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
-        System.out.println("https://api.github.com/user?access_token=" + accessToken);
+//        System.out.println("https://api.github.com/user?access_token=" + accessToken);
         Request request = new Request.Builder()
 //                .url("https://api.github.com/user?access_token=" + accessToken)
                 .url("https://api.github.com/user")
