@@ -52,7 +52,8 @@ public class AuthorizeController {
 
         // 和GitHub进行交互，使用数据进行交互
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-//        accessToken = "9915b692cb6cb41f4a169dcbb36c26aed8cedc72"; // 遇到不能登录试试这个也许可以
+//        accessToken = "99b0d28b95dc3a010d1aa2172bbd9b8c4d2cd419"; // 遇到不能登录试试这个也许可以
+        accessToken = "889f2b805468734f465bc88b2a868673113508b5"; // 遇到不能登录试试这个也许可以，163
         GithubUser githubUser = githubProvider.getUser(accessToken);
 
         // 根据返回的用户信息

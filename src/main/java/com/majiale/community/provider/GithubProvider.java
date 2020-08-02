@@ -7,6 +7,7 @@ import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Component // 把当前类初始化到Spring容器的上下文
 public class GithubProvider {
@@ -38,13 +39,15 @@ public class GithubProvider {
     // 携带accessToken,通过get请求并返回用户信息
     public GithubUser getUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
+        System.out.println("https://api.github.com/user?access_token=" + accessToken);
         Request request = new Request.Builder()
-                .url("https://api.github.com/user?access_token=" + accessToken)
-//                .url("https://api.github.com/user")
-//                .header("Authorization","token "+accessToken)
+//                .url("https://api.github.com/user?access_token=" + accessToken)
+                .url("https://api.github.com/user")
+                .header("Authorization", "token " + accessToken)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try {
+            Response response = client.newCall(request).execute();
             String string = response.body().string();
             // 将string的json解析成java的类对象，兼容将下划线变量匹配到驼峰命名变量
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);

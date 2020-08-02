@@ -1,7 +1,6 @@
 package com.majiale.community.controller;
 
 import com.majiale.community.dto.PaginationDTO;
-import com.majiale.community.mapper.UserMapper;
 import com.majiale.community.model.User;
 import com.majiale.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ProfileController {
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -35,20 +31,7 @@ public class ProfileController {
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
                           @RequestParam(name = "size", defaultValue = "5") Integer size) {
         // 服务器重启，网络掉线，导致的重新连接，因为浏览器没关，cookie一直保存，所以可以继续保持登录状态
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                }
-            }
-        }
-
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return "redirect:/";
         }

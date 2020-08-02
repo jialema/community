@@ -66,9 +66,9 @@ public class QuestionService {
             BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
 
             // 这段代码是为了解决图像显示问题
-            String avatarUrl = user.getAvatarUrl();
-            String newAvatarUrl = avatarUrl.replace("avatars2", "avatars5");
-            user.setAvatarUrl(newAvatarUrl);
+//            String avatarUrl = user.getAvatarUrl();
+//            String newAvatarUrl = avatarUrl.replace("avatars2", "avatars5");
+//            user.setAvatarUrl(newAvatarUrl);
 
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
@@ -115,9 +115,9 @@ public class QuestionService {
             BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
 
             // 这段代码是为了解决图像显示问题
-            String avatarUrl = user.getAvatarUrl();
-            String newAvatarUrl = avatarUrl.replace("avatars2", "avatars5");
-            user.setAvatarUrl(newAvatarUrl);
+//            String avatarUrl = user.getAvatarUrl();
+//            String newAvatarUrl = avatarUrl.replace("avatars2", "avatars5");
+//            user.setAvatarUrl(newAvatarUrl);
 
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
@@ -127,5 +127,14 @@ public class QuestionService {
         paginationDTO.setQuestions(questionDTOList);
 
         return paginationDTO;
+    }
+
+    public QuestionDTO getById(Integer id) {
+        Question question = questionMapper.getById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
+        User user = userMapper.findById(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
     }
 }
