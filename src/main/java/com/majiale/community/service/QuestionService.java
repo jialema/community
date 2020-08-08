@@ -2,6 +2,9 @@ package com.majiale.community.service;
 
 import com.majiale.community.dto.PaginationDTO;
 import com.majiale.community.dto.QuestionDTO;
+import com.majiale.community.exception.CustomizeErrorCode;
+import com.majiale.community.exception.CustomizeException;
+import com.majiale.community.mapper.QuestionExtMapper;
 import com.majiale.community.mapper.QuestionMapper;
 import com.majiale.community.mapper.UserMapper;
 import com.majiale.community.model.Question;
@@ -19,6 +22,9 @@ import java.util.List;
 public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -132,6 +138,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
         User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -155,7 +164,27 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuesiton, example);
+            int updated = questionMapper.updateByExampleSelective(updateQuesiton, example);
+            if (updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    // 问题浏览数统计
+    public void incView(Integer id) {
+        //Question question = questionMapper.selectByPrimaryKey(id);
+        //Question updateQuestion = new Question();
+        //updateQuestion.setViewCount(question.getViewCount() + 1);
+        //QuestionExample questionExample = new QuestionExample();
+        //questionExample.createCriteria()
+        //        .andIdEqualTo(id);
+        //questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
+
     }
 }

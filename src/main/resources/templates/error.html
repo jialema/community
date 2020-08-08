@@ -15,14 +15,10 @@
 <div th:insert="~{navigation :: nav}"></div>
 
 <!--导航栏下面的内容-->
-<div class="container-fluid main">
-    <div class="row">
-        <div class="jumbotron">
-            <h1>错误了！！！</h1>
-            <p th:text="${message}">服务太多，稍等片刻</p>
-            <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
-        </div>
-    </div>
+<div class="jumbotron">
+    <h1>错误了！！！</h1>
+    <p th:text="${message}">服务太多，稍等片刻</p>
+    <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
 </div>
 </body>
 </html>
