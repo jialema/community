@@ -5,7 +5,9 @@ import com.majiale.community.dto.QuestionDTO;
 import com.majiale.community.mapper.QuestionMapper;
 import com.majiale.community.mapper.UserMapper;
 import com.majiale.community.model.Question;
+import com.majiale.community.model.QuestionExample;
 import com.majiale.community.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class QuestionService {
 
         Integer totalPage;
         // 统计数据库有多少条问题记录
-        Integer totalCount = questionMapper.count();
+        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -53,15 +55,16 @@ public class QuestionService {
 
         // size * (page - 1)
         Integer offset = size * (page - 1);
-        // 从数据库查询相关数据
-        List<Question> questions = questionMapper.list(offset, size);
+        // 从数据库查询相关数据，因为description是text类型，所以需要BLOBs
+        // List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
+        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
 
         // 要显示的问题列表，QuestionDTO和question的区别是多了一个User类变量
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         // 为每个问题匹配到相关的用户信息
         for (Question question : questions) {
-            User user = userMapper.findById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
 
@@ -80,7 +83,11 @@ public class QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
 
         Integer totalPage;
-        Integer totalCount = questionMapper.countByUserId(userId);
+
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria()
+                .andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -100,12 +107,16 @@ public class QuestionService {
         // size * (page - 1)
         Integer offset = size * (page - 1);
         // 从数据库查询相关数据
-        List<Question> questions = questionMapper.listByUserId(userId, offset, size);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria()
+                .andCreatorEqualTo(userId);
+        // List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
+        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         // 对从数据库查询到当前页面应该显示数据的解析
         for (Question question : questions) {
-            User user = userMapper.findById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
 
@@ -120,10 +131,10 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO); // 快速question的属性值复制到questionDTO的属性上
-        User user = userMapper.findById(question.getCreator());
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;
     }
@@ -133,11 +144,18 @@ public class QuestionService {
             // 创建
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.create(question);
+            questionMapper.insert(question);
         }else {
             // 更新
-            question.setGmtModified(question.getGmtCreate());
-            questionMapper.update(question);
+            Question updateQuesiton = new Question();
+            updateQuesiton.setGmtModified(System.currentTimeMillis());
+            updateQuesiton.setTitle(question.getTitle());
+            updateQuesiton.setDescription(question.getDescription());
+            updateQuesiton.setTag(question.getTag());
+            QuestionExample example = new QuestionExample();
+            example.createCriteria()
+                    .andIdEqualTo(question.getId());
+            questionMapper.updateByExampleSelective(updateQuesiton, example);
         }
     }
 }

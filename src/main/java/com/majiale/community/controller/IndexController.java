@@ -1,7 +1,9 @@
 package com.majiale.community.controller;
 
 import com.majiale.community.dto.PaginationDTO;
+import com.majiale.community.dto.QuestionDTO;
 import com.majiale.community.mapper.UserMapper;
+import com.majiale.community.model.Question;
 import com.majiale.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 主页面，返回index.html
@@ -34,6 +37,7 @@ public class IndexController {
 
         // 将数据放在前端可访问的位置
         model.addAttribute("pagination", pagination);
+        List<QuestionDTO> questions = pagination.getQuestions();
         return "index";
     }
 }
