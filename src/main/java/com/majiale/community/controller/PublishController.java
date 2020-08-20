@@ -22,7 +22,7 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable(name = "id") Integer id,
+    public String edit(@PathVariable(name = "id") Long id,
                        Model model) {
         QuestionDTO question = questionService.getById(id);
         model.addAttribute("title", question.getTitle());
@@ -42,7 +42,7 @@ public class PublishController {
             @RequestParam(value = "title", required = false) String title, // 这三个参数应该是publish.html中form的三个input，就是http协议中？后的参数
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tag", required = false) String tag,
-            @RequestParam(value = "id", required = false) Integer id, // 更新问题时候用，发布时默认为空
+            @RequestParam(value = "id", required = false) Long id, // 更新问题时候用，发布时默认为空
             HttpServletRequest request,
             Model model) {
 

@@ -15,7 +15,7 @@
 [Visual Paradim](https://www.visual-paradigm.com/)  
 [Flyway](https://flywaydb.org/getstarted/firststeps/maven)  
 [Lombok](https://projectlombok.org/setup/maven)
-[Postman]()
+[Postman](chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html)
 
 ## 脚本
 ```sql
