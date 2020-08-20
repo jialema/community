@@ -10,6 +10,7 @@ import com.majiale.community.model.Comment;
 import com.majiale.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 创建CommentService的原因是，因为既需要往comment表中插入数据，又要往question表中插入数据，所以将它们封装起来。
@@ -26,6 +27,7 @@ public class CommentService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+    @Transactional // 这个注解的作用是如果一条语句出现异常，已经执行的语句造成的结果都回滚到没执行前的状态
     public void insert (Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
