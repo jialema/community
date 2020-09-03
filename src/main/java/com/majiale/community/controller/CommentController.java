@@ -2,6 +2,7 @@ package com.majiale.community.controller;
 
 import com.majiale.community.dto.CommentDTO;
 import com.majiale.community.dto.ResultDTO;
+import com.majiale.community.exception.CustomizeErrorCode;
 import com.majiale.community.mapper.CommentMapper;
 import com.majiale.community.model.Comment;
 import com.majiale.community.model.User;
@@ -26,7 +27,7 @@ public class CommentController {
 
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
-            return ResultDTO.errorOf(2002, "未登录不能进行评论，请先登录");
+            return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
 
         Comment comment = new Comment();
@@ -35,7 +36,7 @@ public class CommentController {
         comment.setType(commentDTO.getType());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setGmtCreate(System.currentTimeMillis());
-        comment.setCommentator(1L);
+        comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okOf();

@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 
 /**
  * @ControllerAdvice 和 @ExceptionHandler 配置进行异常处理
- * 这个类似乎不能处理完全不存在路径异常，比如localhost:8887/mess
+ * 这个类似乎不能处理路径异常，比如localhost:8887/mess
  * 该异常通过CustomizeController处理
  */
 @ControllerAdvice
