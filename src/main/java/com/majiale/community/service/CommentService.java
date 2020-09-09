@@ -67,14 +67,14 @@ public class CommentService {
         }
     }
 
-    // 根据问题id统计它的所有相关评论
-    public List<CommentDTO> listByQuestionId(Long id) {
+    // 根据问题id以及评论类型统计它的所有相关评论
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
-        commentExample.setOrderByClause("gmt_create desc");
-        List<Comment> comments = commentMapper.selectByExample(commentExample); // 根据问题id和评论类型（一级评论）来选择所有相关评论
+                .andTypeEqualTo(type.getType());
+        commentExample.setOrderByClause("gmt_create desc"); // 按照时间倒序排序
+        List<Comment> comments = commentMapper.selectByExample(commentExample); // 根据问题id和评论类型来选择所有相关评论
 
         if (comments.size() == 0) {
             return new ArrayList<>();

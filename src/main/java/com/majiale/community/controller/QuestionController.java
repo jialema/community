@@ -2,7 +2,7 @@ package com.majiale.community.controller;
 
 import com.majiale.community.dto.CommentDTO;
 import com.majiale.community.dto.QuestionDTO;
-import com.majiale.community.mapper.QuestionMapper;
+import com.majiale.community.enums.CommentTypeEnum;
 import com.majiale.community.service.CommentService;
 import com.majiale.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class QuestionController {
         QuestionDTO questionDTO = questionService.getById(id);
 
         // 统计某个问题的所有评论
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
 
         // 累加阅读数
         questionService.incView(id);

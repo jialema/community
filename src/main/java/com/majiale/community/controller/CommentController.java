@@ -3,6 +3,7 @@ package com.majiale.community.controller;
 import com.majiale.community.dto.CommentCreateDTO;
 import com.majiale.community.dto.CommentDTO;
 import com.majiale.community.dto.ResultDTO;
+import com.majiale.community.enums.CommentTypeEnum;
 import com.majiale.community.exception.CustomizeErrorCode;
 import com.majiale.community.mapper.CommentMapper;
 import com.majiale.community.model.Comment;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -48,4 +50,16 @@ public class CommentController {
         commentService.insert(comment);
         return ResultDTO.okOf();
     }
+
+    /**
+     * 以下代码是二级评论展开按钮的响应
+     * List<CommentDTO>是泛型类的类型参数
+     */
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id) {
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
+    }
+
 }
