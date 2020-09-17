@@ -4,10 +4,7 @@ import com.majiale.community.dto.CommentDTO;
 import com.majiale.community.enums.CommentTypeEnum;
 import com.majiale.community.exception.CustomizeErrorCode;
 import com.majiale.community.exception.CustomizeException;
-import com.majiale.community.mapper.CommentMapper;
-import com.majiale.community.mapper.QuestionExtMapper;
-import com.majiale.community.mapper.QuestionMapper;
-import com.majiale.community.mapper.UserMapper;
+import com.majiale.community.mapper.*;
 import com.majiale.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,9 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+
     @Transactional // 这个注解的作用是如果一条语句出现异常，已经执行的语句造成的结果都回滚到没执行前的状态
     public void insert (Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
@@ -55,6 +55,12 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+
+            // 增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
         } else {
             // 回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -67,7 +73,7 @@ public class CommentService {
         }
     }
 
-    // 根据问题id以及评论类型统计它的所有相关评论
+    // 根据问题或评论id以及评论类型统计它的所有相关评论，id为问题id或者一级评论id，type表示评论的枚举类型-question或者comment
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()

@@ -47,6 +47,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId()); // 评论的用户id
         comment.setLikeCount(0L); // 点赞数
+        comment.setCommentCount(0); // 评论数
         commentService.insert(comment);
         return ResultDTO.okOf();
     }

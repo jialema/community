@@ -12,6 +12,7 @@ public class CommentDTO {
     private Long gmtCreate; // 创造时间
     private Long gmtModified; // 修改时间
     private Long likeCount; // 点赞数
+    private Integer commentCount; // 评论数
     private String content; // 评论内容
     private User user; // 评论人
 }
