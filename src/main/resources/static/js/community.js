@@ -119,3 +119,25 @@ function collapseComments(e) {
         }
     }
 }
+
+/**
+ * 让原本隐藏的标签库列表显示出来
+ */
+function showSelectTag() {
+    $("#select-tag").show();
+}
+
+/**
+ * 选择标签并将其添加到标签控件中
+ */
+function selectTag(e) {
+    var value = e.getAttribute("data-tag"); // value是选中的标签字符串值
+    var previous = $("#tag").val(); // previous是当前已有的标签值
+    if (previous.indexOf(value) == -1) { // 判断当前选中的值是否已经存在于选中的标签集合中
+        if (previous) { // 判断先前是否已经存在标签值
+            $("#tag").val(previous + ',' + value); // 如果存在就叠加值
+        } else {
+            $("#tag").val(value); // 如果不存在直接写入
+        }
+    }
+}
