@@ -86,7 +86,7 @@ public class QuestionService {
         }
 
         // 将需要显示的问题列表放在页面显示数据类中
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }
@@ -138,7 +138,7 @@ public class QuestionService {
         }
 
         // 将需要显示的问题列表放在页面显示数据类中
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }

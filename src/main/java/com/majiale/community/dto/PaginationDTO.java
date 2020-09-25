@@ -10,8 +10,8 @@ import java.util.List;
  * 页面显示问题类
  */
 @Data
-public class PaginationDTO {
-    private List<QuestionDTO> questions;  //
+public class PaginationDTO<T> {
+    private List<T> data;  // 当前页数据列表
     private boolean showPrevious;   // 是否显示前一页编号
     private boolean showFirstPage;  // 是否显示第一页编号
     private boolean showNext;       // 是否显示下一页编号

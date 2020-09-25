@@ -48,7 +48,7 @@ public class CommentController {
         comment.setCommentator(user.getId()); // 评论的用户id
         comment.setLikeCount(0L); // 点赞数
         comment.setCommentCount(0); // 评论数
-        commentService.insert(comment);
+        commentService.insert(comment, user); // 将评论保存到数据库
         return ResultDTO.okOf();
     }
 

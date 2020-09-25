@@ -2,6 +2,7 @@ package com.majiale.community.controller;
 
 import com.majiale.community.dto.PaginationDTO;
 import com.majiale.community.model.User;
+import com.majiale.community.service.NotificationService;
 import com.majiale.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class ProfileController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * 个人信息显示界面 /profile/{action}
@@ -40,16 +44,19 @@ public class ProfileController {
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的问题");
-        } else if ("replies".equals(action)) {
+            // 将当前用户的所有问题按页面获取
+            PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
+            // 将数据放在前端可访问的位置
+            model.addAttribute("pagination", paginationDTO);
+        } else if ("replies".equals(action)) { // 最新回复或通知界面
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
+            model.addAttribute("pagination", paginationDTO);
+            model.addAttribute("unreadCount", unreadCount);
             model.addAttribute("sectionName", "最新回复");
         }
 
-        // 将当前用户的所有问题按页面获取
-        PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
-
-        // 将数据放在前端可访问的位置
-        model.addAttribute("pagination", paginationDTO);
         return "profile";
     }
 }

@@ -37,7 +37,6 @@ public class IndexController {
 
         // 将数据放在前端可访问的位置
         model.addAttribute("pagination", pagination);
-        List<QuestionDTO> questions = pagination.getQuestions();
         return "index";
     }
 }
