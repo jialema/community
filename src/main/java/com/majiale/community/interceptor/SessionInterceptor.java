@@ -3,6 +3,7 @@ package com.majiale.community.interceptor;
 import com.majiale.community.mapper.UserMapper;
 import com.majiale.community.model.User;
 import com.majiale.community.model.UserExample;
+import com.majiale.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,6 +19,9 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 服务器重启，网络掉线，导致的重新连接，因为浏览器没关，cookie一直保存，所以可以继续保持登录状态
@@ -32,6 +36,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
+                        Long unreadCount = notificationService.unreadCount(users.get(0).getId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
                     }
                 }
             }
