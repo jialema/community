@@ -24,6 +24,7 @@
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
             <hr>
 
+            <!--这里的表单最后跳转到/publish controller进行处理-->
             <form action="/publish" method="post">
                 <input type="hidden" name="id" th:value="${id}"> <!--用于数据的中转点，重新编辑问题时填入，然后发布时作为表单中的值在后端与数据库交互时候的识别符-->
                 <div class="form-group">

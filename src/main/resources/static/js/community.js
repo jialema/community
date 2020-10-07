@@ -7,6 +7,12 @@ function post() {
     comment2target(questionId, 1, content);
 }
 
+/**
+ * 功能：提交回复处理函数
+ * @param targetId
+ * @param type
+ * @param content
+ */
 function comment2target(targetId, type, content) {
     if(!content) {
         alert("不能回复空内容！");
