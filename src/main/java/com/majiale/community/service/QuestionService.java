@@ -2,6 +2,7 @@ package com.majiale.community.service;
 
 import com.majiale.community.dto.PaginationDTO;
 import com.majiale.community.dto.QuestionDTO;
+import com.majiale.community.dto.QuestionQueryDTO;
 import com.majiale.community.exception.CustomizeErrorCode;
 import com.majiale.community.exception.CustomizeException;
 import com.majiale.community.mapper.QuestionExtMapper;
@@ -38,13 +39,22 @@ public class QuestionService {
      * size：每页问题数
      * PaginationDTO：
      */
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search, Integer page, Integer size) {
+        if (StringUtils.isNotBlank(search)) {
+            // 分隔tag，并拼接成tag1|tag2|tag3的形式
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
         // 页面显示相关数据类
         PaginationDTO paginationDTO = new PaginationDTO();
 
         Integer totalPage;
+
         // 统计数据库有多少条问题记录
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -68,9 +78,9 @@ public class QuestionService {
         // List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         //List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
 
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
 
         // 要显示的问题列表，QuestionDTO和question的区别是多了一个User类变量
         List<QuestionDTO> questionDTOList = new ArrayList<>();
