@@ -87,6 +87,7 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+
             commentMapper.insert(comment);
             question.setCommentCount(1); // 将问题评论数设为1
             questionExtMapper.incCommentCount(question); // SQL语句在原来数据的基础上加上上述的1
@@ -106,6 +107,9 @@ public class CommentService {
      * @param outerId 被评论的问题id
      */
     private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
+        if (receiver == comment.getCommentator()) {
+            return;
+        }
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notificationType.getType());
