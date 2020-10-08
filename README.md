@@ -10,6 +10,7 @@
 [Spring document](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-embedded-database-support) 
 [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#setting-attribute-values)  
 [Markdown 插件](http://editor.md.ipandao.com/) 
+[UFile SDK](https://github.com/ucloud/ufile-sdk-java)
 
 ## 工具
 [Git](https://git-scm.com/download)  
