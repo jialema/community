@@ -2,6 +2,7 @@ package com.majiale.community.controller;
 
 import com.majiale.community.dto.FileDTO;
 import com.majiale.community.provider.UCloudProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
+@Slf4j
 public class FileController {
 
     @Autowired
@@ -32,11 +34,12 @@ public class FileController {
             System.out.println(fileName);
             return fileDTO;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("upload error", e);
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setSuccess(1);
+            fileDTO.setUrl("/images/wechat.jpg");
+            return fileDTO;
         }
-        FileDTO fileDTO = new FileDTO();
-        fileDTO.setSuccess(1);
-        fileDTO.setUrl("/images/wechat.jpg");
-        return fileDTO;
+
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.majiale.community.dto.ResultDTO;
 import com.majiale.community.exception.CustomizeErrorCode;
 import com.majiale.community.exception.CustomizeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,7 @@ import java.io.PrintWriter;
  * 该异常通过CustomizeController处理
  */
 @ControllerAdvice
+@Slf4j
 public class CustomizeExceptionHandler {
 
     @ExceptionHandler(Exception.class) // 所有的Exception都要处理，这里的Exception.class应该是YourException.class
@@ -33,6 +35,7 @@ public class CustomizeExceptionHandler {
             if (e instanceof CustomizeException) {
                 resultDTO = ResultDTO.errorOf((CustomizeException) e);
             } else {
+                log.error("handle error", e);
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
             }
             try {
@@ -50,6 +53,7 @@ public class CustomizeExceptionHandler {
             if (e instanceof CustomizeException) {
                 model.addAttribute("message", "傻逼");
             } else {
+                log.error("handle error", e);
                 model.addAttribute("message", "服务冒烟了，要不然你稍后试试！");
             }
             return new ModelAndView("error");
