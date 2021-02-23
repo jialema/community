@@ -1,5 +1,21 @@
 ## 社区
 
+## 部署
+### 依赖
+- Git
+- JDK
+- Maven
+- MySQL
+### 步骤
+- sudo apt-get update
+- sudo apt-get install git
+- mkdir App
+- cd App
+- git clone https://github.com/jialema/community.git
+- sudo apt install maven
+- mvn -v
+- mvn compile package
+
 ## 资料
 [Spring 文档](https://spring.io/guides)  
 [Spring Web](https://spring.io/guides/gs/serving-web-content/)  
