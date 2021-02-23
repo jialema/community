@@ -15,6 +15,8 @@
 - sudo apt install maven
 - mvn -v
 - mvn compile package
+- cp src/main/resources/application.properties src/main/resources/application-production.properties
+- vim src/main/resources/application-production.properties
 
 ## 资料
 [Spring 文档](https://spring.io/guides)  
