@@ -73,7 +73,7 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage, page);
 
         // size * (page - 1)
-        Integer offset = size * (page - 1);
+        Integer offset = page < 1 ? 0 : size * (page - 1);
         // 从数据库查询相关数据，因为description是text类型，所以需要BLOBs
         // List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         //List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
