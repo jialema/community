@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.200</version>
+            <version>2.1.210</version>
         </dependency>
 
         <!--MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。-->
@@ -166,7 +166,7 @@
                     <dependency>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
-                        <version>1.4.200</version>
+                        <version>2.1.210</version>
                     </dependency>
                 </dependencies>
             </plugin>
